@@ -1,4 +1,4 @@
-function [ x, y ] = rainShadow( row, col, baseslope)
+function [ x, y ] = rainShadow( row, col, baseslope )
 
 x1index = 1;
 y1index = 1;

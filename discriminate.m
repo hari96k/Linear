@@ -3,10 +3,10 @@ function [ string ] = discriminate( finalarray )
 %   Detailed explanation goes here
 
 
-[~,realsize] = size(finalarray);
+[realsize,~] = size(finalarray);
 
 if realsize == 3
-    string = 'tringle';
+    string = 'Tringle';
 end
 
 end

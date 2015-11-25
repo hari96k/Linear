@@ -11,26 +11,31 @@ commandwindow;
 
 img = img_many;
 
-RGB2 = imadjust(img,[.1 .1 .1; .9 .9 .9]);
+% RGB2 = imadjust(img,[.1 .1 .1; .9 .9 .9]);
+% 
+% gray = rgb2gray(RGB2);
+% 
+% ed = edge(gray, 'canny', .2);
+% 
+% edcropped = imcrop (ed, [90 90 1850 1850]);
+% 
+% %edcropped = imcrop (gray, [650 400 1650 1650]);
+% 
+% noNoise = bwareaopen(edcropped, 50);
+% 
+% c = corner(noNoise);
 
-
-
-gray = rgb2gray(RGB2);
-
-ed = edge(gray, 'canny', .15);
-
-%edcropped = imcrop (ed, [600 600 1200 1850]);
-
-edcropped = imcrop (ed, [650 400 1650 1650]);
-
-noNoise = bwareaopen(edcropped, 50);
-
-c = corner(noNoise);
+%Remove later
+noNoise = imcrop (im2bw(img, 0.4), [650 400 950 650]);
+edcropped = noNoise;
+%
 
 figure;
 hold on;
 imshow(noNoise);
 axis on;
+
+
 
 %mserRegions = detectMSERFeatures(bw);
 [row,col] =   find (edcropped==1);
@@ -53,17 +58,18 @@ y = 1;
 xarray = [];
 yarray = [];
 slopearray = [];
+slopeSend = 0;
 keepGoing = 1;
 i = 0;
 
-while keepGoing;
+while keepGoing
         
-    [neighborx,neighbory, slope, keepGoing] = myNeighbor( row(), col(), x, y);
+    [neighborx,neighbory, slope, keepGoing] = myNeighbor( row(), col(), x, y, slopeSend );
     
     xarray(i+1) = x;
     yarray(i+1) = y;
     slopearray(i+1) = slope;
-    
+    slopeSend = slope;
     
      line ([col(y), col(neighbory)], [row(x), row(neighborx)],'Color','r','LineWidth',5);
     
@@ -72,27 +78,9 @@ while keepGoing;
     i= i+1;
 end
 
-[x,y] = rainShadow( row, col, slopearray(1));
-
-for i = 0:countermax
-    [neighborx,neighbory, slope] = myNeighbor( row(), col(), x, y );
-    
-    xarray2(i+1) = x;
-    yarray2(i+1) = y;
-    slopearray2(i+1) = slope;
-    
-    
-     line ([col(y), col(neighbory)], [row(x), row(neighborx)],'Color','g','LineWidth',5);
-    
-    x = neighborx;
-    y = neighbory;
-
-end
-
 
 
 [startxarray, startyarray, endxarray, endyarray] = damnStraight(xarray, yarray, slopearray);
-
 finalarray = [startxarray' endxarray' startyarray' endyarray'];
 
 realsize = size(startxarray');
@@ -101,9 +89,29 @@ for i=1:realsize
 
     line ([col(startyarray(i)), col(endyarray(i))], [row(startxarray(i)), row(endxarray(i))],'Color','b','LineWidth',5);
 
-   % line ([col(startyarray(2)), col(endyarray(2))], [row(startxarray(2)), row(endxarray(2))],'Color','b','LineWidth',5);
-
 end
+
+
+[x,y] = rainShadow( row, col, slopearray(1));
+keepGoing = 1;
+
+j = 0;
+while keepGoing
+    
+    [neighborx,neighbory, slope, keepGoing] = myNeighbor( row(), col(), x, y );
+    
+    xarray2(j+1) = x;
+    yarray2(j+1) = y;
+    slopearray2(j+1) = slope;
+    
+    
+     line ([col(y), col(neighbory)], [row(x), row(neighborx)],'Color','g','LineWidth',5);
+    
+    x = neighborx;
+    y = neighbory;
+    j= j+1;
+end
+
 
 [startxarray, startyarray, endxarray, endyarray] = damnStraight(xarray2, yarray2, slopearray2);
 

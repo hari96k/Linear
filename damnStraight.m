@@ -4,14 +4,20 @@ i = 2;
 
 startxarray(1) = xarray(2);
 startyarray(1) = yarray(2);
-
+[~,breakNumber] = size(slopearray); 
 while ( abs ( slopearray(2) - slopearray(i+1) ) < 1.5 )
     i = i + 1;
+    if (i >= breakNumber )
+    break;
+    end    
 end
 
 endxarray(1) = xarray(i);
 endyarray(1) = yarray(i);
 
+if i == breakNumber
+   return
+end
 
 % for n = 1:i
 %    modearray(n) = slopearray(n);
