@@ -19,11 +19,6 @@ if i == breakNumber
    return
 end
 
-% for n = 1:i
-%    modearray(n) = slopearray(n);
-% end
-% 
-% slopearray(1) = mode(modearray);
 
 
 

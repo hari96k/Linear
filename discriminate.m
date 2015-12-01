@@ -7,6 +7,9 @@ function [ string ] = discriminate( finalarray )
 
 if realsize == 3
     string = 'Tringle';
+
+else
+    string = 'Unknown';
 end
 
 end
