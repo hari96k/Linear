@@ -61,7 +61,6 @@ i = 1;
 
     for a = 1:2
         for b = start:start+1
-           % i = prevEnd;
             keepGoing = 1;
             while keepGoing
                 %n_xyIndex is the index of the neighbor
@@ -75,7 +74,7 @@ i = 1;
                 xyIndex = n_xyIndex;
                 i= i+1;
             end
-            
+            % Determines if the traversal is long enough to be a side
             if (i-prevEnd >3)
                 line ([xArray(index(prevEnd)), xArray(index(i-2))], [yArray(index(prevEnd)), yArray(index(i-2))],'Color','b','LineWidth',5);
                 cornersArray = vertcat(cornersArray,[index(prevEnd), index(i-1)]);
@@ -86,8 +85,10 @@ i = 1;
         prevEnd = 1;
         [xyIndex,~] = mimicShadow( yArray, xArray, yArray(index(2)), xArray(index(2)));
     end
-    
- title(discriminate(cornersArray, xArray, yArray, firstDirection));
+
+
+ 
+title(discriminate( cornersArray, xArray, yArray, index ));
     
 % catch
 %     title('Something went wrong')
