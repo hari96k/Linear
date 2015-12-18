@@ -1,4 +1,16 @@
 
+% Main
+%*****************OUTDATED**********************
+%**************USE PerfectCell******************
+
+% Input: A croped BW image (or RGB image)
+%      Note: This assumes that the copping is correct and there is only one
+%            shape per image
+% Output: Classifies the shape as a triangle, circle, square, or rectangle
+%      Note: The same algorithm could be extended to apply to other
+%            polygons
+
+
 clc;
 clear;
 
@@ -32,9 +44,8 @@ hold on;
 imshow(noNoise);
 axis on;
 
+% Creates the row/col arrays where the image is white (1)
 [row,col] =   find (edcropped==1);
-
-countermax = floor(size(row));
 
 x = 1;
 y = 1;
@@ -42,10 +53,13 @@ y = 1;
 xarray = [];
 yarray = [];
 slopearray = [];
+finalarray = [];
 keepGoing = 1;
 prevEnd = 1;
 repeat = 0;
 i = 0;
+
+%   First iteration attempting to go down then up
 
 for b = 0:1
 
@@ -64,16 +78,19 @@ for b = 0:1
         i= i+1;
     end
     
+    % If going down is successful, then add corner points
+    
     if (i-2-prevEnd >3)
-    line ([col(yarray(prevEnd)), col(yarray(i-1))], [row(xarray(prevEnd)), row(xarray(i-1))],'Color','b','LineWidth',5);
-    prevEnd = i-1;
+        line ([col(yarray(prevEnd)), col(yarray(i-1))], [row(xarray(prevEnd)), row(xarray(i-1))],'Color','b','LineWidth',5);
+        finalarray = vertcat(finalarray,[xarray(prevEnd), xarray(i-1)]);
+        prevEnd = i-1;
     else
-    repeat = 1;
-    xarray2 = 0;
-    yarray2 = 0;
-    slopearray2 = 0;
-    keepGoing = 1;
-    break;
+        repeat = 1;
+        xarray2 = 0;
+        yarray2 = 0;
+        slopearray2 = 0;
+        keepGoing = 1;
+        break;
     end
     keepGoing = 1;
 end
@@ -81,7 +98,8 @@ end
 if (repeat == 1)                                %If going down on rain fails, go up
     i = 0;
     prevEnd = 1;
-    for b = 1:2
+    
+for b = 1:2
 
     while keepGoing
 
@@ -97,21 +115,15 @@ if (repeat == 1)                                %If going down on rain fails, go
         y = neighbory;
         i= i+1;
     end
+    if (i > 3)
     line ([col(yarray2(prevEnd)), col(yarray2(i-1))], [row(xarray2(prevEnd)), row(xarray2(i-1))],'Color','b','LineWidth',5);
+    finalarray = vertcat(finalarray,[xarray(prevEnd), xarray(i-1)]);
     keepGoing = 1;
+    else
+    keepGoing = 0;
     end
 end
-
-% [startxarray, startyarray, endxarray, endyarray] = damnStraight(xarray, yarray, slopearray);
-% finalarray = [startxarray' endxarray' startyarray' endyarray'];
-% 
-% realsize = size(startxarray');
-% 
-% for i=1:realsize
-% 
-%     line ([col(startyarray(i)), col(endyarray(i))], [row(startxarray(i)), row(endxarray(i))],'Color','b','LineWidth',5);
-% 
-% end
+end
 
 
 [x,y] = rainShadow( row, col, slopearray(1), xarray(2), yarray(2));
@@ -121,7 +133,9 @@ repeat = 0;
 
 i = 0;
 
-for b=2:3                                           % Other half
+% Second iteration, first goes up, then goes down
+
+for b=2:3
     while keepGoing
 
         [neighborx,neighbory, slope, keepGoing] = myNeighbor( row(), col(), x, y, b );
@@ -138,19 +152,21 @@ for b=2:3                                           % Other half
         i= i+1;
     end
     if (i-2-prevEnd >3)
-    line ([col(yarray2(prevEnd)), col(yarray2(i-1))], [row(xarray2(prevEnd)), row(xarray2(i-1))],'Color','b','LineWidth',5);
-    prevEnd = i-1;
+        line ([col(yarray2(prevEnd)), col(yarray2(i-1))], [row(xarray2(prevEnd)), row(xarray2(i-1))],'Color','b','LineWidth',5);
+        finalarray = vertcat(finalarray,[xarray(prevEnd), xarray(i-1)]);
+        prevEnd = i-1;
     else
-    repeat = 1;
-    xarray2 = 0;
-    yarray2 = 0;
-    slopearray2 = 0;
-    keepGoing = 1;
-    break;
+        repeat = 1;
+        xarray2 = 0;
+        yarray2 = 0;
+        slopearray2 = 0;
+        keepGoing = 1;
+        break;
     end
     keepGoing = 1;
 end
 
+[limit,~] = size(xarray2);
 
 if (repeat == 1)                                %If going down on rain showdow fails, go up
     i = 0;
@@ -171,27 +187,17 @@ if (repeat == 1)                                %If going down on rain showdow f
         y = neighbory;
         i= i+1;
     end
-    line ([col(yarray2(prevEnd)), col(yarray2(i-1))], [row(xarray2(prevEnd)), row(xarray2(i-1))],'Color','b','LineWidth',5);
-    prevEnd = i-1;
-    keepGoing = 1;
+    if (i > 3)
+        line ([col(yarray2(prevEnd)), col(yarray2(i-1))], [row(xarray2(prevEnd)), row(xarray2(i-1))],'Color','b','LineWidth',5);
+        finalarray = vertcat(finalarray,[xarray(prevEnd), xarray(i-1)]);
+        prevEnd = i-1;
+        keepGoing = 1;
+    else
+        keepGoing = 0;
+    end
     end
 end
-% [startxarray, startyarray, endxarray, endyarray] = damnStraight(xarray2, yarray2, slopearray2);
-% 
-% [~, realsize] = size(startxarray);
-% 
-% for i=1:realsize
-% 
-%     line ([col(startyarray(i)), col(endyarray(i))], [row(startxarray(i)), row(endxarray(i))],'Color','b','LineWidth',5);
-% 
-% end
-    
 
-
-% finalarray2 = [startxarray' endxarray' startyarray' endyarray'];
-% 
-% send = vertcat(finalarray, finalarray2);
-% 
-% title(discriminate(send));
+title(discriminate(finalarray));
 
 

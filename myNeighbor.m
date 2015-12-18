@@ -1,9 +1,9 @@
 function [ x2index, y2index, slope, keepGoing ] = myNeighbor( row, col, x1index, y1index, selection )
 
 if (selection == 2)
-    selection = 0;
+    selection = 0;                          %going down
 elseif (selection == 3)
-    selection = 1;
+    selection = 1;                          %going up
 end
 
 [limit,~] = size(row);
@@ -12,8 +12,8 @@ x1 = row(x1index);
 y1 = col(y1index);
 
 if (x1index + 10 <= limit)
-    x2index = x1index + 10;
-    y2index = y1index + 10;
+    x2index = x1index + 5;
+    y2index = y1index + 5;
 else
     keepGoing = 0;
     x2index = x1index;
@@ -35,7 +35,7 @@ keepGoing = 1;
 %( sqrt((deltax)^2 + (deltay)^2) > 10)
 
 if selection == 1                   %going up
-   while (( sqrt((deltax)^2 + (deltay)^2) > 10) || (deltax > 0) || ((deltax == 0) && ( sqrt((deltax)^2 + (deltay)^2) < 5)) )
+   while (( sqrt((deltax)^2 + (deltay)^2) > 8) || (deltax > 0) || ((deltax == 0) && ( sqrt((deltax)^2 + (deltay)^2) < 5)) )
 %    x1index = x1index - 1;
 %    y1index = y1index - 1;
      x2index = x2index + 1;
@@ -61,7 +61,7 @@ if selection == 1                   %going up
    end
 
 else                            %going down
-     while (( sqrt((deltax)^2 + (deltay)^2) > 10) || (deltax < 0) || ((deltax == 0) && ( sqrt((deltax)^2 + (deltay)^2) < 5)))
+     while (( sqrt((deltax)^2 + (deltay)^2) > 8) || (deltax < 0) || ((deltax == 0) && ( sqrt((deltax)^2 + (deltay)^2) < 5)))
 %    x1index = x1index - 1;
 %    y1index = y1index - 1;
      x2index = x2index + 1;
