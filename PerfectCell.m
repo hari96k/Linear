@@ -18,7 +18,7 @@ img_reallybad = imread('images/test/copy.png');
 img_croppedt = imread('images/crop2.jpg');
 
 
-% Change this assignment to debug with another image
+% Change the img and c_image assignment to debug with another image
 
 
 img = img_many;
@@ -29,10 +29,18 @@ img = img_many;
 % c_image = imcrop (ed, [90 90 1850 1850]);
 
 
-
+%Circle
 c_image = imcrop (im2bw(img, 0.4), [650 400 950 650]);
 
-c_image = bwareaopen(c_image, 50);
+%Triangle
+% c_image = imcrop (im2bw(img, 0.4), [200 300 400 400]);
+
+repeat = 1;
+noiseLVL = 0;
+
+while  repeat && noiseLVL < 6
+
+c_image = bwareaopen(c_image, 500*noiseLVL);
 
 figure;hold on;imshow(c_image);axis on;
 
@@ -49,7 +57,7 @@ prevEnd = 1;
 i = 1;
 
 % Global error handle, catches all exceptions
-%  try
+ try
     % Determines which direction of traversal (up/down) should be first
     if ( yArray(20) > yArray(1) )
         start = 1;                      %go up
@@ -69,14 +77,14 @@ i = 1;
                 index(i) = xyIndex;
                 slopeArray(i) = slope;
 
-                line ([xArray(xyIndex), xArray(n_xyIndex)], [yArray(xyIndex), yArray(n_xyIndex)],'Color','r','LineWidth',5);
+                line ([xArray(xyIndex), xArray(n_xyIndex)], [yArray(xyIndex), yArray(n_xyIndex)],'Color','r','LineWidth',2);
 
                 xyIndex = n_xyIndex;
                 i= i+1;
             end
             % Determines if the traversal is long enough to be a side
-            if (i-prevEnd >3)
-                line ([xArray(index(prevEnd)), xArray(index(i-2))], [yArray(index(prevEnd)), yArray(index(i-2))],'Color','b','LineWidth',5);
+            if (i-prevEnd > .1*i + 5)
+                line ([xArray(index(prevEnd)), xArray(index(i-2))], [yArray(index(prevEnd)), yArray(index(i-2))],'Color','b','LineWidth',4);
                 cornersArray = vertcat(cornersArray,[index(prevEnd), index(i-1)]);
                 prevEnd = i;
             end
@@ -88,9 +96,19 @@ i = 1;
 
 
  
-title(discriminate( cornersArray, xArray, yArray, index ));
-    
-% catch
-%     title('Something went wrong')
-% end
+    shape = discriminate( cornersArray, xArray, yArray, index );
+
+    if ( ~strcmp(shape, 'Unknown') && (~strcmp(shape, 'Line')) )
+        repeat = 0;
+    end
+
+    noiseLVL = noiseLVL + 1;
+    title(shape);
+
+catch
+    title('Something went wrong')
+end
+
+end
+
 

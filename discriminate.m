@@ -2,9 +2,8 @@ function [ string ] = discriminate( corners, x, y, index )
 
 [realsize,~] = size(corners);
 
-string = 'Unknown';
-
-if realsize < 3
+if realsize == 2 || realsize == 1 ;
+    string = 'Line';
     return
 end
 
@@ -33,7 +32,6 @@ if realsize > 4
     return
 end
 
-% radius = (x(corners(4,2)) - x(corners(1,1)))/2;
 
     for b = 1:4
         xmid = ( ( x(corners(b,2)) ) + x(corners(b,1)) ) / 2;
@@ -43,6 +41,25 @@ end
     end
 
 if (condition < 2)
+    
+    xrad = (x(corners(4,2)) - x(corners(1,1)))/2 ;
+    if ( y(corners(2,1) < y(corners(4,1))) )
+        yrad = (y(corners(2,1)) - y(corners(4,1)))/2 ;
+    else
+        yrad = (y(corners(4,1)) - y(corners(2,1)))/2 ;
+    end
+    r = (xrad + yrad )/2;
+
+    xc = (x(corners(4,2)) + x(corners(1,1)))/2;
+
+    yc = (y(corners(4,2)) + y(corners(1,1)))/2;
+
+    theta = linspace(0,2*pi);
+    x = r*cos(theta) + xc;
+    y = r*sin(theta) + yc;
+    hold on;
+    plot(x,y, 'g', 'LineStyle','- -')
+
     string = 'Circle';
     return
 end
