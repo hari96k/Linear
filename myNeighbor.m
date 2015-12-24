@@ -41,7 +41,7 @@ if selection == 1                   %going up
      x2index = x2index + 1;
      y2index = y2index + 1;
      
-     if (((x2index - x1index) > 200) || (x2index > limit)) 
+     if (((x2index - x1index) > 1000) || (x2index > limit)) 
          keepGoing = 0;
          x2index = x1index;
          y2index = y1index;

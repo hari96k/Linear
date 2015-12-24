@@ -4,7 +4,7 @@ if row(1) < avoidx
     selection = 1;        %find shadow up
 end
 
-if row(1) > avoidx
+if row(1) >= avoidx
     selection = 0;        %find shadow down
 end
 
@@ -18,7 +18,7 @@ deltax = x2-avoidx;
 deltay = y2-avoidy;
 
 if selection == 0
-     while ((x2 < row(1)) || sqrt((deltax)^2 + (deltay)^2) < 8 )
+     while ((x2 < row(1)) || sqrt((deltax)^2 + (deltay)^2) < 15 )
         x2index = x2index + 1;
         y2index = y2index + 1;
 
@@ -30,7 +30,7 @@ if selection == 0
      end
 
 else if selection == 1
-        while (( x2 > row(1) ) || sqrt((deltax)^2 + (deltay)^2) < 8 )
+        while (( x2 > row(1) ) || sqrt((deltax)^2 + (deltay)^2) < 15 )
             x2index = x2index + 1;
             y2index = y2index + 1;
 
