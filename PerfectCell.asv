@@ -34,15 +34,15 @@ img_r1 = imread('images/test/1_square.jpg');
 % img_rectangle2 = imread('images/test/rectangle2.jpg');
 % img_rectangle3 = imread('images/test/rectangle3.jpg');
 % img_barelyRectangle = imread('images/test/barelyRectangle.jpg');
- img_star = imread('images/test/star2.jpg');
+ img_star = imread('images/test/star.jpg');
  img_cross = imread('images/test/cross.jpg');
  img_trap = imread('images/test/trap.png');
- img_nothing = imread('images/test/nothing2.jpg');
+ img_nothing = imread('images/test/nothing.jpg');
 
 % Change the img and c_image assignment to debug with another image
 
 
-img = img_star;
+img = img_trap;
 
 %Small Triangle (img_bad)
 % RGB2 = imadjust(img,[.1 .1 .1; .9 .9 .9]);
@@ -75,7 +75,7 @@ nothing = 0;
 
 % Global error handle, catches all exceptions
 
-try
+% try
     
 while  repeat && noiseLVL < 50
 
@@ -180,7 +180,7 @@ title('Approximations');
 
 
  
-    [shape, xcenter, ycenter] = discriminate( cornersArray, xArray, yArray, index );
+    shape = discriminate( cornersArray, xArray, yArray, index );
     
     if strcmp(shape, 'Trap Queen') && flipped == 0
        tryToFlip = 1;
@@ -203,23 +203,19 @@ title('Approximations');
 end
 
 
-catch
-    if nothing == 1
-        shape = 'Empty';
-    else
-        shape = 'Something went wrong =/';
-    end
-end
 
-hold on;
 
-if (xcenter ~= 0 && ycenter ~= 0 )
-    scatter (xcenter, ycenter, 'y*');
-end
+% catch
+%     if nothing == 1
+%         shape = 'Empty';
+%     else
+%         shape = 'Something went wrong =/';
+%     end
+% end
 
 figure; imshow(c_image);axis on;hold on;
 
-
+scatter (xcenter, ycenter, 'b*');
 
 [count, ~] = size(cornersArray);
 

@@ -34,7 +34,7 @@ end
 % 1-2 Traversal
 if corners(2,2) == corners(3,1)
     
-    if abs(sideSlopes(1) - sideSlopes(3)) < .5
+    if abs(sideSlopes(1) - sideSlopes(3)) < .2
         numPar = numPar + 1;
     end
 
@@ -51,7 +51,7 @@ if corners(2,2) == corners(3,1)
 % 2-1 Traversal
 else if corners(1,2) == corners(2,1)
     
-        if abs(sideSlopes(2) - sideSlopes(3)) < .5
+        if abs(sideSlopes(2) - sideSlopes(3)) < .2
             numPar = numPar + 1;
         end
 
@@ -64,18 +64,20 @@ else if corners(1,2) == corners(2,1)
 %     end
     else
         %4 sided shapes
-        if abs(sideSlopes(1) - sideSlopes(3)) < .5
+        if abs(sideSlopes(1) - sideSlopes(3)) < .2
             numPar = numPar + 1;
         end
         
-        if abs(sideSlopes(2) - sideSlopes(4)) < .5
+        if abs(sideSlopes(2) - sideSlopes(4)) < .2
             numPar = numPar + 1;
         end
     end
+
 end
 
-%% FINDING CENTER
+%
 
+% Finding center of image
 
 [numNeigh,~] = size(x);
 
@@ -88,7 +90,8 @@ end
 xcenter = xcenter/numNeigh;
 ycenter = ycenter/numNeigh;
 
-%% THREE-SIDED SHAPES
+
+
 
 condition = 0;
 xEdges = x(index(index ~= 0));
@@ -188,7 +191,6 @@ if realsize > 4
     return
 end
 
-%% FOUR SIDED SHAPES 
 %Anything beyond this point must be a square, rectangle, circle, or unknown
 
     for b = 1:4
