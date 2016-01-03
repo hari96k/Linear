@@ -35,13 +35,13 @@ keepGoing = 1;
 %( sqrt((deltax)^2 + (deltay)^2) > 10)
 
 if selection == 1                   %going up
-   while (( sqrt((deltax)^2 + (deltay)^2) > 10) || (deltax > 0) || ((deltax == 0) && ( sqrt((deltax)^2 + (deltay)^2) < 5)) )
+   while (( sqrt((deltax)^2 + (deltay)^2) > 15) || (deltax > 0) || ((deltax == 0) && ( sqrt((deltax)^2 + (deltay)^2) < 5)) )
 %    x1index = x1index - 1;
 %    y1index = y1index - 1;
      x2index = x2index + 1;
      y2index = y2index + 1;
      
-     if (((x2index - x1index) > 1000) || (x2index > limit)) 
+     if (((x2index - x1index) > 300) || (x2index > limit)) 
          keepGoing = 0;
          x2index = x1index;
          y2index = y1index;
@@ -61,14 +61,13 @@ if selection == 1                   %going up
    end
 
 else                            %going down
-     while (( sqrt((deltax)^2 + (deltay)^2) > 10) || (deltax < 0) || ((deltax == 0) && ( sqrt((deltax)^2 + (deltay)^2) < 5)))
+   while (( sqrt((deltax)^2 + (deltay)^2) > 15) || (deltax < 0) || ((deltax == 0) && ( sqrt((deltax)^2 + (deltay)^2) < 5)))
 %    x1index = x1index - 1;
 %    y1index = y1index - 1;
      x2index = x2index + 1;
      y2index = y2index + 1;
-     [sizeof,~] = size(row);
      
-     if (((x2index - x1index) > 200) || (x2index > sizeof)) 
+     if (((x2index - x1index) > 300) || (x2index > limit)) 
          keepGoing = 0;
          x2index = x1index;
          y2index = y1index;
