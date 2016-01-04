@@ -1,0 +1,5 @@
+1) Open PerfectCell.m (this is the main)
+
+2) Pick your favorite image under image selection (or add a new one)
+
+3) Run =)
