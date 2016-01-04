@@ -35,7 +35,7 @@ keepGoing = 1;
 %( sqrt((deltax)^2 + (deltay)^2) > 10)
 
 if selection == 1                   %going up
-   while (( sqrt((deltax)^2 + (deltay)^2) > 15) || (deltax > 0) || ((deltax == 0) && ( sqrt((deltax)^2 + (deltay)^2) < 5)) )
+   while (( sqrt((deltax)^2 + (deltay)^2) > 20) || (deltax > 0) || ((deltax == 0) && ( sqrt((deltax)^2 + (deltay)^2) < 5)) )
 %    x1index = x1index - 1;
 %    y1index = y1index - 1;
      x2index = x2index + 1;
@@ -61,7 +61,7 @@ if selection == 1                   %going up
    end
 
 else                            %going down
-   while (( sqrt((deltax)^2 + (deltay)^2) > 15) || (deltax < 0) || ((deltax == 0) && ( sqrt((deltax)^2 + (deltay)^2) < 5)))
+   while (( sqrt((deltax)^2 + (deltay)^2) > 20) || (deltax < 0) || ((deltax == 0) && ( sqrt((deltax)^2 + (deltay)^2) < 5)))
 %    x1index = x1index - 1;
 %    y1index = y1index - 1;
      x2index = x2index + 1;

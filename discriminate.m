@@ -4,7 +4,7 @@ function [ string , xcenter, ycenter] = discriminate( corners, x, y, index, trav
 xcenter = 0;
 ycenter = 0;
 
-scale = 30;
+scale = 20;
 
 [realsize,~] = size(corners);
 
@@ -24,9 +24,9 @@ for b = 1:realsize
     length(b) = sqrt(  deltax^2  + deltay^2 ) ;
 end
 
-% if max(length) < 60;
-%     return;
-% end
+if min(length) < 25;
+    return;
+end
 
 % scale = min(length)/4;
 
@@ -37,8 +37,8 @@ if realsize == 3
     
 end
 
-if realsize == 2 && max(length) - min(length) < min(length)/5
-    string = 'Trap Queen';      %Might be a star
+if realsize == 2 && max(length) - min(length) < min(length)/3
+    string = 'KAMEHAMEHA';      %Might be a star
     return
 else if realsize == 2
         return
@@ -71,11 +71,11 @@ if traversal == 1
         numPar = numPar + 1;
     end
 
-    if abs(-1/sideSlopes(1) - sideSlopes(2)) < sideSlopes(2)*.30
+    if abs(-1/sideSlopes(1) - sideSlopes(2)) < abs(sideSlopes(2)*.30)
         numPerp = numPerp + 1;
     end
 
-    if abs(-1/sideSlopes(2) - sideSlopes(3)) < sideSlopes(3)*.30
+    if abs(-1/sideSlopes(2) - sideSlopes(3)) < abs(sideSlopes(3)*.30)
         numPerp = numPerp + 1;
     end
     
@@ -88,15 +88,15 @@ if traversal == 1
 % 2-1 Traversal
 else if traversal == 2 && realsize == 3
     
-        if abs(sideSlopes(2) - sideSlopes(3)) < sideSlopes(3)*.30
+        if abs(sideSlopes(2) - sideSlopes(3)) < abs(sideSlopes(3)*.30)
             numPar = numPar + 1;
         end
 
-        if abs(-1/sideSlopes(1) - sideSlopes(2)) < sideSlopes(2)*.30
+        if abs(-1/sideSlopes(1) - sideSlopes(2)) < abs(sideSlopes(2)*.30)
             numPerp = numPerp + 1;
         end
 
-        if abs(-1/sideSlopes(2) - sideSlopes(3)) < sideSlopes(3)*.30
+        if abs(-1/sideSlopes(2) - sideSlopes(3)) < abs(sideSlopes(3)*.30)
             numPerp = numPerp + 1;
         end
 
@@ -107,18 +107,18 @@ else if traversal == 2 && realsize == 3
     else
         
         %4 sided shapes
-        if abs(sideSlopes(1) - sideSlopes(3)) < sideSlopes(3)*.30
+        if abs(sideSlopes(1) - sideSlopes(4)) < abs(sideSlopes(4)*.30)
             numPar = numPar + 1;
         end
         
-        if abs(sideSlopes(2) - sideSlopes(4)) < sideSlopes(4)*.30
+        if abs(sideSlopes(2) - sideSlopes(3)) < abs(sideSlopes(3)*.30)
             numPar = numPar + 1;
         end
     end
 end
 
 
-%% FINDING CENTER
+%% FINDING CENTERS
 
 xEdges = x(index(index ~= 0));
 yEdges = y(index(index ~= 0));
@@ -134,7 +134,18 @@ end
 xcenter = xcenter/numNeigh;
 ycenter = ycenter/numNeigh;
 
+[numTotal, ~] = size(x);
 
+
+t_xcenter = 0;
+t_ycenter = 0;
+for f = 1:numTotal
+    t_xcenter = t_xcenter + x(f);
+    t_ycenter = t_ycenter + y(f);
+end
+
+t_xcenter = t_xcenter/numTotal;
+t_ycenter = t_ycenter/numTotal;
 
 %% THREE-SIDED SHAPES
 
@@ -144,7 +155,7 @@ condition = 0;
 if realsize == 3
     
     if corners(1,2) == corners(2,2)
-        string = 'Trap Queen';
+        string = 'KAMEHAMEHA';
         return
     end
        
@@ -157,43 +168,65 @@ if realsize == 3
         condition = condition + notAlone( xmid , ymid , xEdges, yEdges, scale );    
     end
     
-    % Create a length array for the 3-sided shape
-    length = zeros([3 1]);
-
-    for b = 1:3
-        deltax = x(corners(b,2)) - x(corners(b,1)) ;
-        deltay = y(corners(b,2)) - y(corners(b,1)) ;
-        length(b) = sqrt(  deltax^2  + deltay^2 ) ;
-    end
+%     % Create a length array for the 3-sided shape
+%     % Lasted this far? Give yourself a treat: https://www.youtube.com/watch?v=uEiDBFu8FIw&list=PLRBp0Fe2GpgmsW46rJyudVFlY6IYjFBIK&index=18
+%     length = zeros([3 1]);
+% 
+%     for b = 1:3
+%         deltax = x(corners(b,2)) - x(corners(b,1)) ;
+%         deltay = y(corners(b,2)) - y(corners(b,1)) ;
+%         length(b) = sqrt(  deltax^2  + deltay^2 ) ;
+%     end
     
-    if condition == 2           % Catches Trapezoids
+    if condition == 2           % Catches Trapezoids and Stars
         % 2-1 Traversal
         if traversal == 2
-            xmid = ( x(corners(1,1)) + x(corners(1,2)) )/2 ;
-            ymid = ( y(corners(1,1)) + y(corners(1,2)) )/2 ;     
-            deltax = xmid - xcenter ;
-            deltay = ymid - ycenter ;
-            if sqrt(deltax^2 + deltay^2) < scale
-                if notAlone( xcenter , ycenter , xEdges, yEdges, scale )
-                    string = 'Star';
-                else
-                    string = 'Trapezoid';
-                end
+            if length(1)<length(2)
+                trapSide = 2;
+            else
+                trapSide = 1;
             end
+            xmid = ( x(corners(trapSide,1)) + x(corners(trapSide,2)) )/2 ;
+            ymid = ( y(corners(trapSide,1)) + y(corners(trapSide,2)) )/2 ;     
+            deltax = xmid - t_xcenter ;
+            deltay = ymid - t_ycenter ;
+            if sqrt(deltax^2 + deltay^2) < min(length)/2 && ~notAlone( xcenter , ycenter , xEdges, yEdges, scale )
+                    string = 'Trapezoid';
+                    return;
+            end
+            xmid = ( x(corners(2,2)) + x(corners(3,2)) )/2 ;
+            ymid = ( y(corners(2,2)) + y(corners(3,2)) )/2 ;     
+            deltax = xmid - t_xcenter ;
+            deltay = ymid - t_ycenter ;
+            if sqrt(deltax^2 + deltay^2) < min(length)/3 && notAlone( xcenter , ycenter , xEdges, yEdges, scale )
+                    string = 'Star';
+                    return;
+            end            
+            
         else
         % 1-2 Traversal    
             if traversal == 1
-                xmid = ( x(corners(3,1)) + x(corners(3,2)) )/2 ;
-                ymid = ( y(corners(3,1)) + y(corners(3,2)) )/2 ;     
-                deltax = xmid - xcenter ;
-                deltay = ymid - ycenter ;
-                if sqrt(deltax^2 + deltay^2) < scale
-                    if notAlone( xcenter , ycenter , xEdges, yEdges, scale )
-                        string = 'Star';
-                    else
-                        string = 'Trapezoid';
-                    end
+                if length(2)<length(3)
+                    trapSide = 3;
+                else
+                    trapSide = 2;
                 end
+                xmid = ( x(corners(trapSide,1)) + x(corners(trapSide,2)) )/2 ;
+                ymid = ( y(corners(trapSide,1)) + y(corners(trapSide,2)) )/2 ;     
+                deltax = xmid - t_xcenter ;
+                deltay = ymid - t_ycenter ;
+                if sqrt(deltax^2 + deltay^2) < min(length)/2 && ~notAlone( xcenter , ycenter , xEdges, yEdges, scale )
+                    string = 'Trapezoid';
+                    return;
+                end
+                xmid = ( x(corners(1,2)) + x(corners(3,2)) )/2 ;
+                ymid = ( y(corners(1,2)) + y(corners(3,2)) )/2 ;     
+                deltax = xmid - t_xcenter ;
+                deltay = ymid - t_ycenter ;
+                if sqrt(deltax^2 + deltay^2) < min(length)/3 && notAlone( xcenter , ycenter , xEdges, yEdges, scale )
+                        string = 'Star';
+                        return;
+                end  
             end
         end
     end
@@ -244,7 +277,16 @@ if realsize > 4
 end
 
 %% FOUR SIDED SHAPES 
-%Anything beyond this point must be a square, rectangle, circle, or unknown
+%Anything beyond this point must be a square, rectangle, circle, trapezoid or unknown
+    
+    centersAllign = 0;
+    deltax = xcenter - t_xcenter;
+    deltay = ycenter - t_ycenter;
+    distance = sqrt(  deltax^2  + deltay^2 ) ;
+    
+    if distance < min(length)/2
+        centersAllign = 1;
+    end
 
     endGreetings = 0;
     deltax = x(corners(2,2)) - x(corners(4,2)) ;
@@ -262,7 +304,7 @@ end
         condition = condition + notAlone( xmid , ymid , xEdges, yEdges, scale );    
     end
 
-if (condition < 2)      %Catches circles  
+if condition < 2 && centersAllign     %Catches circles  
     string = 'Circle';  %***All regular n-sided shapes with n > 4 are likely to be caught here as circles
     return
 end
@@ -276,14 +318,16 @@ end
 %     length(c) = sqrt(  deltax^2  + deltay^2 ) ;
 % end
 
-if condition >= 3 && endGreetings == 1
+if condition >= 3 && endGreetings == 1 && numPar == 2
     if (( max(length) - min(length)) < .25* mean(length) )
         string = 'Square';
     else
         string = 'Rectangle';
     end
 
-% else
-%     string = 'Box Box';
+else if condition >= 3 && endGreetings == 1 && numPar == 1
+        string = 'Trapezoid';
+    end
+     
 end
 
